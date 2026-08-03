@@ -73,7 +73,7 @@
     }
 
 
-    /* Luci molto morbide */
+    /* Luci morbide */
 
     .glow {
       position: absolute;
@@ -160,14 +160,12 @@
     ===================================================== */
 
     .header {
-
       position: absolute;
 
       top: 0;
       left: 0;
 
       width: 100%;
-
       height: 92px;
 
       display: flex;
@@ -200,16 +198,9 @@
     }
 
 
-    /*
-      Pattern decorativo.
-
-      È volutamente molto leggero:
-      si nota guardando lo sfondo,
-      ma non disturba il testo.
-    */
+    /* Pattern decorativo */
 
     .header::before {
-
       content: "";
 
       position: absolute;
@@ -255,13 +246,9 @@
     }
 
 
-    /*
-      Una sottile linea "organica"
-      nella parte bassa dell'header.
-    */
+    /* Linea organica */
 
     .header::after {
-
       content: "";
 
       position: absolute;
@@ -283,8 +270,6 @@
     }
 
 
-    /* Il testo deve stare sopra il pattern */
-
     .header-text {
       position: relative;
 
@@ -297,7 +282,6 @@
     ===================================================== */
 
     .quote-container {
-
       position: absolute;
 
       left: 50%;
@@ -316,13 +300,7 @@
     }
 
 
-    /*
-      Il font-size viene modificato
-      dinamicamente da JavaScript.
-    */
-
     .quote {
-
       font-family: "Manrope", sans-serif;
 
       font-size: 5rem;
@@ -359,7 +337,6 @@
     ===================================================== */
 
     .instagram {
-
       position: absolute;
 
       left: 50%;
@@ -403,7 +380,6 @@
 
 
     .instagram:hover {
-
       transform:
         translateX(-50%)
         translateY(-4px);
@@ -419,7 +395,6 @@
     ===================================================== */
 
     .error {
-
       font-family: "DM Sans", sans-serif;
 
       font-size: 0.9rem;
@@ -480,15 +455,13 @@
 
 
   <!-- =====================================================
-       PAGE
+       PAGINA
   ===================================================== -->
 
   <main class="page">
 
 
-    <!-- =================================================
-         HEADER
-    ================================================== -->
+    <!-- HEADER -->
 
     <header class="header">
 
@@ -499,9 +472,7 @@
     </header>
 
 
-    <!-- =================================================
-         QUOTE
-    ================================================== -->
+    <!-- FRASE -->
 
     <section class="quote-container">
 
@@ -515,11 +486,11 @@
     </section>
 
 
-    <!-- =================================================
-         INSTAGRAM
+    <!-- INSTAGRAM -->
 
-         👇 CAMBIA SOLO "nomeutente"
-    ================================================== -->
+    <!--
+      CAMBIA "nomeutente" CON IL TUO USERNAME
+    -->
 
     <a
       class="instagram"
@@ -543,20 +514,10 @@
 
   <script>
 
-    /*
-     * =====================================================
-     * CARICAMENTO DELLA FRASE
-     * =====================================================
-     *
-     * Nel file frase1.txt puoi scrivere:
-     *
-     * Questa è la prima riga.<br>
-     * Questa è la seconda riga.<br>
-     * E questa è la terza.
-     *
-     * I <br> vengono mantenuti.
-     */
 
+    /* =====================================================
+       CARICA LE FRASI
+    ===================================================== */
 
     fetch("frase1.txt")
 
@@ -572,33 +533,92 @@
 
       .then(text => {
 
-        const quote = document.getElementById("quote");
+        /*
+         * Dividiamo il file ogni volta che troviamo
+         * il tag <cambio>.
+         */
 
-        const cleanText = text.trim();
+        const phrases = text
+          .split("<cambio>")
 
 
-        if (!cleanText) {
+          /*
+           * Rimuoviamo gli spazi vuoti
+           * prima e dopo ogni frase.
+           */
 
-          quote.innerHTML =
-            '<span class="error">frase1.txt è vuoto.</span>';
+          .map(phrase => phrase.trim())
 
-          quote.classList.add("visible");
+
+          /*
+           * Ignoriamo eventuali blocchi vuoti.
+           * Per esempio se hai accidentalmente:
+           *
+           * frase 1
+           * <cambio>
+           * <cambio>
+           * frase 2
+           */
+
+          .filter(phrase => phrase.length > 0);
+
+
+        /*
+         * Se non ci sono frasi valide.
+         */
+
+        if (phrases.length === 0) {
+
+          showError(
+            "Non ci sono frasi nel file frase1.txt."
+          );
 
           return;
         }
 
 
+        /* =================================================
+           SCELTA RANDOM
+        ================================================== */
+
         /*
-         * Usiamo innerHTML proprio perché vogliamo
-         * interpretare i <br> scritti nel file.
+         * Math.random() genera un numero tra 0 e 1.
+         *
+         * Moltiplicandolo per il numero di frasi
+         * otteniamo un indice casuale.
          */
 
-        quote.innerHTML = cleanText;
+        const randomIndex =
+          Math.floor(
+            Math.random() * phrases.length
+          );
 
 
         /*
-         * Aspettiamo che il browser abbia
-         * effettivamente renderizzato il testo.
+         * Prendiamo la frase casuale.
+         */
+
+        const selectedPhrase =
+          phrases[randomIndex];
+
+
+        /*
+         * Inseriamo la frase nella pagina.
+         *
+         * Usiamo innerHTML perché vogliamo mantenere
+         * i <br> scritti nel file TXT.
+         */
+
+        const quote =
+          document.getElementById("quote");
+
+        quote.innerHTML =
+          selectedPhrase;
+
+
+        /*
+         * Aspettiamo il rendering del browser
+         * prima di calcolare la dimensione.
          */
 
         requestAnimationFrame(() => {
@@ -611,28 +631,42 @@
 
       })
 
+
+      /* =================================================
+         ERRORE
+      ================================================== */
+
       .catch(error => {
 
         console.error(error);
 
-        const quote = document.getElementById("quote");
-
-        quote.innerHTML =
-          '<span class="error">Impossibile caricare la frase.</span>';
-
-        quote.classList.add("visible");
+        showError(
+          "Impossibile caricare frase1.txt."
+        );
 
       });
 
 
     /*
-     * =====================================================
-     * RIDIMENSIONAMENTO AUTOMATICO
-     * =====================================================
-     *
-     * Cerca la dimensione massima del font che permette
-     * alla riga più lunga di stare dentro il contenitore.
+     * Funzione per mostrare gli errori.
      */
+
+    function showError(message) {
+
+      const quote =
+        document.getElementById("quote");
+
+      quote.innerHTML =
+        `<span class="error">${message}</span>`;
+
+      quote.classList.add("visible");
+
+    }
+
+
+    /* =====================================================
+       RIDIMENSIONAMENTO DEL FONT
+    ===================================================== */
 
     function adjustFontSize() {
 
@@ -644,7 +678,7 @@
 
 
       /*
-       * Dimensione massima.
+       * Dimensione iniziale.
        */
 
       let maxSize =
@@ -664,9 +698,7 @@
 
 
       /*
-       * Larghezza disponibile.
-       *
-       * Lasciamo un po' di margine laterale.
+       * Larghezza massima disponibile.
        */
 
       const maxWidth =
@@ -674,15 +706,16 @@
 
 
       /*
-       * Prima impostiamo la dimensione massima.
+       * Partiamo dalla dimensione più grande.
        */
 
-      quote.style.fontSize = maxSize + "px";
+      quote.style.fontSize =
+        maxSize + "px";
 
 
       /*
-       * Se il testo non entra,
-       * riduciamo gradualmente.
+       * Riduciamo il carattere finché
+       * la frase non entra.
        */
 
       while (
@@ -699,14 +732,9 @@
     }
 
 
-    /*
-     * =====================================================
-     * RESPONSIVE
-     * =====================================================
-     *
-     * Ricalcola il font se viene ridimensionata
-     * la finestra del browser.
-     */
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
 
     let resizeTimer;
 
@@ -721,6 +749,7 @@
       }, 100);
 
     });
+
 
   </script>
 
