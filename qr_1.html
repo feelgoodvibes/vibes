@@ -7,7 +7,7 @@
 
   <title>Here is what I'm telling you</title>
 
-  <!-- Font moderno -->
+  <!-- Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -16,7 +16,7 @@
     rel="stylesheet"
   >
 
-  <!-- Icone -->
+  <!-- Instagram icon -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
@@ -24,9 +24,9 @@
 
   <style>
 
-    /* =========================
+    /* =====================================================
        RESET
-    ========================= */
+    ===================================================== */
 
     * {
       margin: 0;
@@ -34,46 +34,46 @@
       box-sizing: border-box;
     }
 
-
-    /* =========================
-       PAGINA
-    ========================= */
-
     html,
     body {
       width: 100%;
       height: 100%;
     }
 
+
+    /* =====================================================
+       BODY
+    ===================================================== */
+
     body {
+      position: relative;
+
       overflow: hidden;
 
       background: #111214;
-      color: #ffffff;
+      color: white;
 
       font-family: "DM Sans", sans-serif;
-
-      position: relative;
-
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
 
 
-    /* =========================
+    /* =====================================================
        SFONDO
-    ========================= */
+    ===================================================== */
 
-    .background-glow {
-      position: absolute;
+    .background {
+      position: fixed;
       inset: 0;
 
       overflow: hidden;
 
       pointer-events: none;
+
       z-index: 0;
     }
+
+
+    /* Luci molto morbide */
 
     .glow {
       position: absolute;
@@ -83,27 +83,27 @@
 
       border-radius: 50%;
 
-      filter: blur(120px);
+      filter: blur(130px);
 
-      opacity: 0.12;
+      opacity: 0.10;
     }
 
-    .glow.one {
+    .glow-1 {
       top: -35%;
-      left: -15%;
+      left: -20%;
 
-      background: #777777;
+      background: #777;
     }
 
-    .glow.two {
+    .glow-2 {
+      right: -20%;
       bottom: -40%;
-      right: -15%;
 
-      background: #555555;
+      background: #555;
     }
 
 
-    /* Onde sottili */
+    /* Onde */
 
     .wave {
       position: absolute;
@@ -115,207 +115,280 @@
 
       border-radius: 50%;
 
-      border-top: 1px solid rgba(255, 255, 255, 0.035);
-
-      pointer-events: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.025);
     }
 
-    .wave.one {
-      top: -27%;
+    .wave-1 {
+      top: -25%;
+
       transform: rotate(-6deg);
     }
 
-    .wave.two {
-      top: -22%;
-      transform: rotate(-6deg) translateY(45px);
+    .wave-2 {
+      top: -20%;
 
-      opacity: 0.55;
+      transform: rotate(-6deg) translateY(50px);
+
+      opacity: 0.5;
     }
 
-    .wave.three {
+    .wave-3 {
       bottom: -28%;
+
       transform: rotate(6deg);
 
       opacity: 0.5;
     }
 
-    .wave.four {
-      bottom: -23%;
-      transform: rotate(6deg) translateY(-40px);
 
-      opacity: 0.3;
-    }
-
-
-    /* =========================
-       CONTENITORE PRINCIPALE
-    ========================= */
+    /* =====================================================
+       PAGINA
+    ===================================================== */
 
     .page {
       position: relative;
-      z-index: 2;
 
       width: 100%;
       height: 100vh;
 
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      z-index: 2;
     }
 
 
-    /* =========================
-       INTESTAZIONE
-    ========================= */
+    /* =====================================================
+       HEADER
+    ===================================================== */
 
     .header {
-      margin-top: 32px;
-
-      padding: 14px 30px;
-
-      position: relative;
-
-      font-family: "Manrope", sans-serif;
-
-      font-size: clamp(0.75rem, 1.5vw, 0.95rem);
-
-      font-weight: 500;
-
-      letter-spacing: 0.08em;
-
-      text-transform: lowercase;
-
-      color: rgba(255, 255, 255, 0.78);
-
-      background: rgba(255, 255, 255, 0.025);
-
-      backdrop-filter: blur(10px);
-
-      /*
-        Bordo leggermente "ondulato"
-        ottenuto tramite pseudo-elementi
-      */
-      border: 1px solid rgba(255, 255, 255, 0.10);
-
-      border-radius: 18px;
-
-      box-shadow:
-        0 12px 40px rgba(0, 0, 0, 0.35),
-        inset 0 1px 0 rgba(255, 255, 255, 0.04);
-    }
-
-    .header::before {
-      content: "";
 
       position: absolute;
 
-      inset: -3px;
+      top: 0;
+      left: 0;
 
-      border-radius: 21px;
+      width: 100%;
 
-      border: 1px solid rgba(255, 255, 255, 0.025);
-
-      pointer-events: none;
-    }
-
-
-    /* =========================
-       FRASE CENTRALE
-    ========================= */
-
-    .quote-container {
-      position: absolute;
-
-      top: 50%;
-      left: 50%;
-
-      transform: translate(-50%, -50%);
-
-      width: min(1000px, 86vw);
-
-      text-align: center;
-    }
-
-    .quote {
-      font-family: "Manrope", sans-serif;
-
-      font-size: clamp(2.2rem, 5vw, 5rem);
-
-      font-weight: 500;
-
-      line-height: 1.08;
-
-      letter-spacing: -0.055em;
-
-      color: #ffffff;
-
-      text-shadow:
-        0 0 35px rgba(255, 255, 255, 0.06),
-        0 10px 50px rgba(0, 0, 0, 0.30);
-
-      /*
-        Piccola animazione all'apparizione
-      */
-      animation: appear 1s ease-out;
-    }
-
-    @keyframes appear {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-
-    /* =========================
-       ERRORE LETTURA FILE
-    ========================= */
-
-    .error {
-      font-size: 0.9rem;
-
-      color: rgba(255, 255, 255, 0.45);
-
-      font-family: "DM Sans", sans-serif;
-    }
-
-
-    /* =========================
-       INSTAGRAM
-    ========================= */
-
-    .instagram {
-      position: absolute;
-
-      bottom: 32px;
+      height: 92px;
 
       display: flex;
       align-items: center;
       justify-content: center;
 
+      overflow: hidden;
+
+      font-family: "Manrope", sans-serif;
+
+      font-size: 0.85rem;
+      font-weight: 500;
+
+      letter-spacing: 0.12em;
+
+      text-transform: lowercase;
+
+      color: rgba(255, 255, 255, 0.75);
+
+      background-color: rgba(20, 21, 23, 0.82);
+
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+      box-shadow:
+        0 15px 50px rgba(0, 0, 0, 0.30);
+
+      backdrop-filter: blur(15px);
+
+      z-index: 5;
+    }
+
+
+    /*
+      Pattern decorativo.
+
+      È volutamente molto leggero:
+      si nota guardando lo sfondo,
+      ma non disturba il testo.
+    */
+
+    .header::before {
+
+      content: "";
+
+      position: absolute;
+
+      inset: 0;
+
+      opacity: 0.20;
+
+      background-image:
+
+        radial-gradient(
+          circle at 20% 50%,
+          rgba(255,255,255,0.15) 0 1px,
+          transparent 1.5px
+        ),
+
+        radial-gradient(
+          circle at 70% 30%,
+          rgba(255,255,255,0.10) 0 1px,
+          transparent 1.5px
+        ),
+
+        radial-gradient(
+          circle at 45% 80%,
+          rgba(255,255,255,0.08) 0 1px,
+          transparent 1.5px
+        );
+
+      background-size:
+        90px 90px,
+        130px 130px,
+        110px 110px;
+
+      mask-image: linear-gradient(
+        to right,
+        transparent,
+        black 20%,
+        black 80%,
+        transparent
+      );
+
+      pointer-events: none;
+    }
+
+
+    /*
+      Una sottile linea "organica"
+      nella parte bassa dell'header.
+    */
+
+    .header::after {
+
+      content: "";
+
+      position: absolute;
+
+      left: -5%;
+      bottom: -14px;
+
+      width: 110%;
+      height: 28px;
+
+      border-radius: 50%;
+
+      border-top: 1px solid rgba(255,255,255,0.055);
+
+      box-shadow:
+        0 -5px 20px rgba(255,255,255,0.025);
+
+      pointer-events: none;
+    }
+
+
+    /* Il testo deve stare sopra il pattern */
+
+    .header-text {
+      position: relative;
+
+      z-index: 2;
+    }
+
+
+    /* =====================================================
+       FRASE
+    ===================================================== */
+
+    .quote-container {
+
+      position: absolute;
+
+      left: 50%;
+      top: 50%;
+
+      transform: translate(-50%, -50%);
+
+      width: min(1500px, 92vw);
+
+      text-align: center;
+
+      display: flex;
+      justify-content: center;
+
+      padding: 20px;
+    }
+
+
+    /*
+      Il font-size viene modificato
+      dinamicamente da JavaScript.
+    */
+
+    .quote {
+
+      font-family: "Manrope", sans-serif;
+
+      font-size: 5rem;
+
+      font-weight: 500;
+
+      line-height: 1.10;
+
+      letter-spacing: -0.055em;
+
+      color: #fff;
+
+      text-align: center;
+
+      text-shadow:
+        0 0 35px rgba(255,255,255,0.055),
+        0 15px 50px rgba(0,0,0,0.30);
+
+      opacity: 0;
+
+      transition:
+        opacity 0.7s ease,
+        font-size 0.25s ease;
+    }
+
+
+    .quote.visible {
+      opacity: 1;
+    }
+
+
+    /* =====================================================
+       INSTAGRAM
+    ===================================================== */
+
+    .instagram {
+
+      position: absolute;
+
+      left: 50%;
+      bottom: 30px;
+
+      transform: translateX(-50%);
+
       width: 48px;
       height: 48px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       border-radius: 50%;
 
       color: white;
 
-      background: rgba(255, 255, 255, 0.055);
+      background: rgba(255,255,255,0.045);
 
-      border: 1px solid rgba(255, 255, 255, 0.10);
-
-      text-decoration: none;
-
-      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.10);
 
       box-shadow:
-        0 10px 35px rgba(0, 0, 0, 0.35),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        0 10px 35px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+
+      backdrop-filter: blur(12px);
+
+      text-decoration: none;
 
       transition:
         transform 0.25s ease,
@@ -323,49 +396,60 @@
         border-color 0.25s ease;
     }
 
+
     .instagram i {
       font-size: 19px;
     }
 
+
     .instagram:hover {
-      transform: translateY(-4px);
 
-      background: rgba(255, 255, 255, 0.10);
+      transform:
+        translateX(-50%)
+        translateY(-4px);
 
-      border-color: rgba(255, 255, 255, 0.20);
+      background: rgba(255,255,255,0.09);
+
+      border-color: rgba(255,255,255,0.20);
     }
 
-    .instagram:active {
-      transform: translateY(-1px);
+
+    /* =====================================================
+       ERRORE
+    ===================================================== */
+
+    .error {
+
+      font-family: "DM Sans", sans-serif;
+
+      font-size: 0.9rem;
+
+      color: rgba(255,255,255,0.40);
     }
 
 
-    /* =========================
+    /* =====================================================
        MOBILE
-    ========================= */
+    ===================================================== */
 
     @media (max-width: 600px) {
 
       .header {
-        margin-top: 24px;
+        height: 76px;
 
-        padding: 12px 20px;
+        font-size: 0.72rem;
 
-        letter-spacing: 0.05em;
+        letter-spacing: 0.08em;
       }
 
       .quote-container {
-        width: 88vw;
-      }
+        width: 94vw;
 
-      .quote {
-        font-size: clamp(2rem, 10vw, 3.2rem);
-
-        letter-spacing: -0.045em;
+        padding: 10px;
       }
 
       .instagram {
-        bottom: 24px;
+        bottom: 22px;
 
         width: 46px;
         height: 46px;
@@ -378,50 +462,64 @@
 
 <body>
 
-  <!-- =========================
-       SFONDO
-  ========================== -->
 
-  <div class="background-glow">
-    <div class="glow one"></div>
-    <div class="glow two"></div>
+  <!-- =====================================================
+       BACKGROUND
+  ===================================================== -->
 
-    <div class="wave one"></div>
-    <div class="wave two"></div>
-    <div class="wave three"></div>
-    <div class="wave four"></div>
+  <div class="background">
+
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+
+    <div class="wave wave-1"></div>
+    <div class="wave wave-2"></div>
+    <div class="wave wave-3"></div>
+
   </div>
 
 
-  <!-- =========================
-       PAGINA
-  ========================== -->
+  <!-- =====================================================
+       PAGE
+  ===================================================== -->
 
   <main class="page">
 
-    <!-- INTESTAZIONE -->
+
+    <!-- =================================================
+         HEADER
+    ================================================== -->
 
     <header class="header">
-      here is what I'm telling you
+
+      <div class="header-text">
+        here is what I'm telling you
+      </div>
+
     </header>
 
 
-    <!-- FRASE -->
+    <!-- =================================================
+         QUOTE
+    ================================================== -->
 
     <section class="quote-container">
 
-      <div id="quote" class="quote">
+      <div
+        id="quote"
+        class="quote"
+      >
         Caricamento...
       </div>
 
     </section>
 
 
-    <!-- INSTAGRAM -->
+    <!-- =================================================
+         INSTAGRAM
 
-    <!--
-      ✏️ CAMBIA "nomeutente" CON IL TUO USERNAME
-    -->
+         👇 CAMBIA SOLO "nomeutente"
+    ================================================== -->
 
     <a
       class="instagram"
@@ -430,24 +528,42 @@
       rel="noopener noreferrer"
       aria-label="Instagram"
     >
+
       <i class="fa-brands fa-instagram"></i>
+
     </a>
+
 
   </main>
 
 
-  <!-- =========================
-       LETTURA FRASE
-  ========================== -->
+  <!-- =====================================================
+       SCRIPT
+  ===================================================== -->
 
   <script>
+
+    /*
+     * =====================================================
+     * CARICAMENTO DELLA FRASE
+     * =====================================================
+     *
+     * Nel file frase1.txt puoi scrivere:
+     *
+     * Questa è la prima riga.<br>
+     * Questa è la seconda riga.<br>
+     * E questa è la terza.
+     *
+     * I <br> vengono mantenuti.
+     */
+
 
     fetch("frase1.txt")
 
       .then(response => {
 
         if (!response.ok) {
-          throw new Error("File frase1.txt non trovato");
+          throw new Error("frase1.txt non trovato");
         }
 
         return response.text();
@@ -458,19 +574,40 @@
 
         const quote = document.getElementById("quote");
 
-        /*
-          Rimuove eventuali spazi o righe vuote
-          all'inizio e alla fine del file.
-        */
-
         const cleanText = text.trim();
 
-        if (cleanText.length === 0) {
-          quote.textContent = "Il file frase1.txt è vuoto.";
+
+        if (!cleanText) {
+
+          quote.innerHTML =
+            '<span class="error">frase1.txt è vuoto.</span>';
+
+          quote.classList.add("visible");
+
           return;
         }
 
-        quote.textContent = cleanText;
+
+        /*
+         * Usiamo innerHTML proprio perché vogliamo
+         * interpretare i <br> scritti nel file.
+         */
+
+        quote.innerHTML = cleanText;
+
+
+        /*
+         * Aspettiamo che il browser abbia
+         * effettivamente renderizzato il testo.
+         */
+
+        requestAnimationFrame(() => {
+
+          adjustFontSize();
+
+          quote.classList.add("visible");
+
+        });
 
       })
 
@@ -478,12 +615,115 @@
 
         console.error(error);
 
-        document.getElementById("quote").innerHTML =
+        const quote = document.getElementById("quote");
+
+        quote.innerHTML =
           '<span class="error">Impossibile caricare la frase.</span>';
 
+        quote.classList.add("visible");
+
       });
+
+
+    /*
+     * =====================================================
+     * RIDIMENSIONAMENTO AUTOMATICO
+     * =====================================================
+     *
+     * Cerca la dimensione massima del font che permette
+     * alla riga più lunga di stare dentro il contenitore.
+     */
+
+    function adjustFontSize() {
+
+      const quote =
+        document.getElementById("quote");
+
+      const container =
+        document.querySelector(".quote-container");
+
+
+      /*
+       * Dimensione massima.
+       */
+
+      let maxSize =
+        window.innerWidth <= 600
+          ? 52
+          : 90;
+
+
+      /*
+       * Dimensione minima.
+       */
+
+      const minSize =
+        window.innerWidth <= 600
+          ? 25
+          : 32;
+
+
+      /*
+       * Larghezza disponibile.
+       *
+       * Lasciamo un po' di margine laterale.
+       */
+
+      const maxWidth =
+        container.clientWidth * 0.94;
+
+
+      /*
+       * Prima impostiamo la dimensione massima.
+       */
+
+      quote.style.fontSize = maxSize + "px";
+
+
+      /*
+       * Se il testo non entra,
+       * riduciamo gradualmente.
+       */
+
+      while (
+        quote.scrollWidth > maxWidth &&
+        maxSize > minSize
+      ) {
+
+        maxSize -= 1;
+
+        quote.style.fontSize =
+          maxSize + "px";
+      }
+
+    }
+
+
+    /*
+     * =====================================================
+     * RESPONSIVE
+     * =====================================================
+     *
+     * Ricalcola il font se viene ridimensionata
+     * la finestra del browser.
+     */
+
+    let resizeTimer;
+
+    window.addEventListener("resize", () => {
+
+      clearTimeout(resizeTimer);
+
+      resizeTimer = setTimeout(() => {
+
+        adjustFontSize();
+
+      }, 100);
+
+    });
 
   </script>
 
 </body>
+
 </html>
