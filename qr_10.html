@@ -1,124 +1,409 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Here is what I'm telling you</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<style>
-*{box-sizing:border-box}
-html,body{width:100%;height:100%;margin:0}
-body{overflow:hidden;background:#111214;color:#fff;font-family:"DM Sans",sans-serif}
-.bg{position:fixed;inset:0;overflow:hidden;pointer-events:none}
-.glow{position:absolute;width:58vw;height:58vw;border-radius:50%;filter:blur(130px);opacity:.09}
-.g1{top:-35%;left:-20%;background:#888}.g2{right:-22%;bottom:-40%;background:#666}
-.wave{position:absolute;width:150%;height:52%;left:-25%;border-radius:50%;border-top:1px solid rgba(255,255,255,.025)}
-.w1{top:-25%;transform:rotate(-6deg)}.w2{top:-20%;transform:rotate(-6deg) translateY(50px);opacity:.5}.w3{bottom:-28%;transform:rotate(6deg);opacity:.45}
-.page{position:relative;height:100vh;width:100%;z-index:2}
-.header{position:absolute;top:0;left:0;width:100%;height:92px;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:"Manrope",sans-serif;font-size:.85rem;font-weight:500;letter-spacing:.12em;color:rgba(255,255,255,.75);background:rgba(20,21,23,.82);border-bottom:1px solid rgba(255,255,255,.08);box-shadow:0 15px 50px rgba(0,0,0,.3);backdrop-filter:blur(15px);z-index:5}
-.header:before{content:"";position:absolute;inset:0;opacity:.18;background-image:radial-gradient(circle at 20% 50%,rgba(255,255,255,.15) 0 1px,transparent 1.5px),radial-gradient(circle at 70% 30%,rgba(255,255,255,.1) 0 1px,transparent 1.5px),radial-gradient(circle at 45% 80%,rgba(255,255,255,.08) 0 1px,transparent 1.5px);background-size:90px 90px,130px 130px,110px 110px}
-.header span{position:relative;z-index:2}
-.quote-wrap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1500px,94vw);padding:15px;text-align:center;display:flex;justify-content:center}
-.quote{font-family:"Manrope",sans-serif;font-size:90px;font-weight:500;line-height:1.08;letter-spacing:-.055em;color:#fff;text-shadow:0 0 35px rgba(255,255,255,.055),0 15px 50px rgba(0,0,0,.3);opacity:0;transition:opacity .65s ease}
-.quote.visible{opacity:1}
-.quote-line{display:block;white-space:nowrap}
-.instagram{position:absolute;left:50%;bottom:30px;transform:translateX(-50%);width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:50%;color:#fff;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.1);box-shadow:0 10px 35px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.05);backdrop-filter:blur(12px);text-decoration:none}
-.error{font-family:monospace;font-size:12px;color:#aaa;max-width:90vw;white-space:pre-wrap}
-@media(max-width:600px){.header{height:76px;font-size:.72rem;letter-spacing:.08em}.quote-wrap{width:96vw;padding:8px}.instagram{bottom:22px;width:46px;height:46px}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Here is what I'm telling you</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            overflow: hidden;
+            background: #111214;
+            color: white;
+            font-family: "Manrope", sans-serif;
+        }
+
+        /* SFONDO */
+
+        .background {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.07;
+        }
+
+        .glow.one {
+            top: -300px;
+            left: -200px;
+            background: white;
+        }
+
+        .glow.two {
+            right: -300px;
+            bottom: -300px;
+            background: #777;
+        }
+
+        .wave {
+            position: absolute;
+            width: 160%;
+            height: 500px;
+            left: -30%;
+            border-radius: 50%;
+            border-top: 1px solid rgba(255,255,255,0.025);
+        }
+
+        .wave.one {
+            top: -300px;
+            transform: rotate(-6deg);
+        }
+
+        .wave.two {
+            top: -220px;
+            transform: rotate(-6deg);
+        }
+
+        .wave.three {
+            bottom: -350px;
+            transform: rotate(6deg);
+        }
+
+
+        /* PAGINA */
+
+        .page {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+        }
+
+
+        /* HEADER */
+
+        .header {
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 90px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: rgba(25, 26, 28, 0.8);
+
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+
+            backdrop-filter: blur(15px);
+
+            font-size: 14px;
+            letter-spacing: 0.12em;
+
+            color: rgba(255,255,255,0.75);
+        }
+
+
+        /* FRASE */
+
+        .phrase-container {
+
+            position: absolute;
+
+            top: 50%;
+            left: 50%;
+
+            transform: translate(-50%, -50%);
+
+            width: 94vw;
+
+            text-align: center;
+        }
+
+        #phrase {
+
+            font-size: 90px;
+
+            font-weight: 500;
+
+            line-height: 1.08;
+
+            letter-spacing: -0.055em;
+
+            text-shadow:
+                0 0 35px rgba(255,255,255,0.05),
+                0 15px 50px rgba(0,0,0,0.3);
+
+            opacity: 0;
+
+            transition: opacity 0.5s ease;
+        }
+
+        #phrase.show {
+            opacity: 1;
+        }
+
+        .line {
+            display: block;
+            white-space: nowrap;
+        }
+
+
+        /* INSTAGRAM */
+
+        .instagram {
+
+            position: absolute;
+
+            left: 50%;
+            bottom: 30px;
+
+            transform: translateX(-50%);
+
+            width: 48px;
+            height: 48px;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: white;
+
+            text-decoration: none;
+
+            background: rgba(255,255,255,0.05);
+
+            border: 1px solid rgba(255,255,255,0.1);
+
+            font-size: 20px;
+        }
+
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+
+            .header {
+                height: 75px;
+                font-size: 11px;
+            }
+
+            #phrase {
+                font-size: 54px;
+            }
+
+            .instagram {
+                bottom: 22px;
+                width: 46px;
+                height: 46px;
+            }
+
+        }
+
+    </style>
 </head>
+
+
 <body>
-<div class="bg"><div class="glow g1"></div><div class="glow g2"></div><div class="wave w1"></div><div class="wave w2"></div><div class="wave w3"></div></div>
-<main class="page">
-<header class="header"><span>here is what I'm telling you</span></header>
-<section class="quote-wrap"><div id="quote" class="quote"></div></section>
-<a class="instagram" href="https://www.instagram.com/nomeutente" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-</main>
+
+    <div class="background">
+
+        <div class="glow one"></div>
+        <div class="glow two"></div>
+
+        <div class="wave one"></div>
+        <div class="wave two"></div>
+        <div class="wave three"></div>
+
+    </div>
+
+
+    <main class="page">
+
+        <header class="header">
+            here is what I'm telling you
+        </header>
+
+
+        <div class="phrase-container">
+
+            <div id="phrase"></div>
+
+        </div>
+
+
+        <a
+            class="instagram"
+            href="https://www.instagram.com/nomeutente"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            ◎
+        </a>
+
+    </main>
+
 
 <script>
-const PHRASE_FILE="frase10.txt";
 
-function escapeHtml(text){
-  const div=document.createElement("div");
-  div.textContent=text;
-  return div.innerHTML;
-}
+    /*
+        FILE DELLA FRASE
 
-function renderPhrase(text){
-  const quote=document.getElementById("quote");
+        Per qr_1.html:
+        frase1.txt
 
-  // Rimuove eventuale BOM e spazi iniziali/finali.
-  text=text.replace(/^\\uFEFF/,"").trim();
+        Per qr_2.html:
+        frase2.txt
 
-  // <br> è l'unico comando che decide il ritorno a capo.
-  // Il contenuto delle singole righe viene trattato come semplice testo,
-  // quindi nessun HTML viene interpretato accidentalmente.
-  const lines=text.split(/<br\\s*\\/?\\s*>/i);
+        ecc.
+    */
 
-  quote.innerHTML=lines.map(line =>
-    '<span class="quote-line">'+escapeHtml(line)+'</span>'
-  ).join("");
+    const FILE_FRASE = "frase10.txt";
 
-  fitFont();
-  requestAnimationFrame(()=>quote.classList.add("visible"));
-}
 
-function fitFont(){
-  const quote=document.getElementById("quote");
-  const wrap=document.querySelector(".quote-wrap");
-  const lines=quote.querySelectorAll(".quote-line");
-  if(!lines.length)return;
+    /*
+        LEGGE IL FILE
+    */
 
-  let size=innerWidth<=600 ? 54 : 90;
-  const min=innerWidth<=600 ? 18 : 28;
-  const maxWidth=wrap.clientWidth*0.94;
+    fetch(FILE_FRASE)
+        .then(response => {
 
-  quote.style.fontSize=size+"px";
+            if (!response.ok) {
+                throw new Error("Impossibile leggere " + FILE_FRASE);
+            }
 
-  while(size>min){
-    let tooWide=false;
-    lines.forEach(line=>{
-      if(line.scrollWidth>maxWidth) tooWide=true;
-    });
-    if(!tooWide)break;
-    size--;
-    quote.style.fontSize=size+"px";
-  }
-}
+            return response.text();
 
-async function loadPhrase(){
-  const quote=document.getElementById("quote");
+        })
 
-  try{
-    // Il parametro evita che il browser mostri una vecchia versione
-    // della frase dopo un salvataggio da gestione.html.
-    const response=await fetch(PHRASE_FILE+"?v="+Date.now(),{
-      cache:"no-store"
-    });
+        .then(testo => {
 
-    if(!response.ok){
-      throw new Error("HTTP "+response.status+" — impossibile leggere "+PHRASE_FILE);
+            mostraFrase(testo);
+
+        })
+
+        .catch(errore => {
+
+            console.error(errore);
+
+        });
+
+
+    /*
+        MOSTRA LA FRASE
+    */
+
+    function mostraFrase(testo) {
+
+        testo = testo.trim();
+
+        const contenitore = document.getElementById("phrase");
+
+        /*
+            <br> decide dove andare a capo.
+        */
+
+        const righe = testo.split("<br>");
+
+
+        contenitore.innerHTML = "";
+
+
+        righe.forEach(riga => {
+
+            const elemento = document.createElement("span");
+
+            elemento.className = "line";
+
+            elemento.textContent = riga.trim();
+
+            contenitore.appendChild(elemento);
+
+        });
+
+
+        adattaFont();
+
+        contenitore.classList.add("show");
+
     }
 
-    const text=await response.text();
 
-    if(!text.trim()){
-      throw new Error(PHRASE_FILE+" è vuoto.");
+    /*
+        ADATTA AUTOMATICAMENTE IL FONT
+        ALLA RIGA PIÙ LUNGA
+    */
+
+    function adattaFont() {
+
+        const contenitore = document.getElementById("phrase");
+
+        const righe = contenitore.querySelectorAll(".line");
+
+        let dimensione = window.innerWidth <= 600 ? 54 : 90;
+
+        const minimo = window.innerWidth <= 600 ? 20 : 30;
+
+        const larghezzaMassima = window.innerWidth * 0.88;
+
+
+        contenitore.style.fontSize = dimensione + "px";
+
+
+        while (dimensione > minimo) {
+
+            let troppoLunga = false;
+
+
+            righe.forEach(riga => {
+
+                if (riga.scrollWidth > larghezzaMassima) {
+
+                    troppoLunga = true;
+
+                }
+
+            });
+
+
+            if (!troppoLunga) {
+                break;
+            }
+
+
+            dimensione--;
+
+            contenitore.style.fontSize = dimensione + "px";
+
+        }
+
     }
 
-    renderPhrase(text);
-  }catch(error){
-    quote.classList.add("visible");
-    quote.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
-    console.error(error);
-  }
-}
 
-window.addEventListener("resize",fitFont);
-loadPhrase();
+    window.addEventListener("resize", adattaFont);
+
 </script>
+
 </body>
 </html>
