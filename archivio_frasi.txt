@@ -1,0 +1,3 @@
+Questa è una frase dell'archivio.<br>Puoi modificarla.<cambio>
+Questa è un'altra frase.<cambio>
+Inserisci qui le tue frasi.

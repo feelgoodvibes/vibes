@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Gestione frasi</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#0f1012;color:#f5f5f5;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,textarea,select{font:inherit}
+.app{max-width:1100px;margin:auto;padding:18px 14px 50px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.title h1{font-size:24px;font-weight:600;margin:0}.title p{margin:5px 0 0;color:#85878d;font-size:13px}
+.btn{border:1px solid #303238;background:#1b1d20;color:#fff;border-radius:11px;padding:11px 14px;cursor:pointer}.btn.primary{background:#fff;color:#111;border-color:#fff}.btn.danger{color:#ff8e8e}.btn.small{padding:8px 10px;font-size:13px}
+.tabs{display:flex;gap:8px;margin-bottom:18px}.tab{flex:1}.tab.active{background:#fff;color:#111}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{position:relative;background:#181a1d;border:1px solid #292c31;border-radius:17px;padding:18px;min-height:170px;cursor:pointer}.card:hover{border-color:#444}.num{font-size:11px;color:#6f7279;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}.preview{font-size:16px;line-height:1.5;color:#ededed;word-break:break-word}.pencil{position:absolute;right:13px;top:13px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#25282c;color:#bbb}
+.panel{display:none}.panel.active{display:block}.archive-list{display:grid;gap:10px}.archive-item{background:#181a1d;border:1px solid #292c31;border-radius:15px;padding:15px}.archive-text{line-height:1.5;word-break:break-word}.actions{display:flex;gap:8px;margin-top:12px}
+.empty{color:#777;text-align:center;padding:30px}.hint{color:#73767d;font-size:12px;margin:8px 0 16px}.newbox{background:#181a1d;border:1px solid #292c31;border-radius:17px;padding:15px;margin-bottom:16px}
+textarea{width:100%;min-height:130px;resize:vertical;background:#101114;color:#fff;border:1px solid #363940;border-radius:11px;padding:13px;outline:none}textarea:focus,input:focus,select:focus{border-color:#777}.row{display:flex;gap:8px;margin-top:10px}.row>*{flex:1}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:18px;z-index:20}.overlay.hidden{display:none}.login{width:min(480px,100%);background:#181a1d;border:1px solid #30343a;border-radius:20px;padding:22px;box-shadow:0 30px 90px #000}.login h2{margin:0 0 6px}.login p{color:#85878d;font-size:13px;line-height:1.5}.login input{width:100%;background:#101114;color:#fff;border:1px solid #363940;border-radius:11px;padding:13px;outline:none}.error{min-height:20px;color:#ff8585;font-size:13px;margin-top:9px}.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:18px;z-index:15}.modal.open{display:flex}.box{width:min(650px,100%);max-height:90vh;overflow:auto;background:#181a1d;border:1px solid #30343a;border-radius:20px;padding:18px}.box h3{margin:0 0 12px}.select{margin-top:10px;width:100%;background:#101114;color:#fff;border:1px solid #363940;border-radius:11px;padding:12px}.status{min-height:19px;color:#7f838a;font-size:13px;margin-top:8px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.top{align-items:flex-start}.top .btn{white-space:nowrap}.card{min-height:145px}.app{padding-top:14px}.actions{flex-wrap:wrap}.actions .btn{flex:1}}
+</style>
+</head>
+<body>
+<div id="loginOverlay" class="overlay">
+  <div class="login">
+    <h2>Gestione privata</h2>
+    <p>Inserisci il tuo GitHub Fine-grained Personal Access Token. Il token viene usato solo in questa scheda e non viene scritto nel repository.</p>
+    <input id="tokenInput" type="password" autocomplete="off" placeholder="github_pat_...">
+    <div class="row"><button class="btn primary" onclick="login()">Accedi</button></div>
+    <div id="loginError" class="error"></div>
+  </div>
+</div>
+
+<div class="app">
+  <div class="top">
+    <div class="title"><h1>Gestione frasi</h1><p>12 QR code · GitHub Pages</p></div>
+    <button class="btn" onclick="logout()">Esci</button>
+  </div>
+  <div class="tabs">
+    <button id="tabQR" class="btn tab active" onclick="showPanel('qr')">QR code</button>
+    <button id="tabArchive" class="btn tab" onclick="showPanel('archive')">Archivio frasi</button>
+  </div>
+
+  <section id="qrPanel" class="panel active">
+    <div class="hint">Tocca un riquadro per modificare la frase. Usa &lt;br&gt; per decidere dove andare a capo.</div>
+    <div id="qrGrid" class="grid"></div>
+  </section>
+
+  <section id="archivePanel" class="panel">
+    <div class="newbox">
+      <textarea id="newArchivePhrase" placeholder="Nuova frase...&#10;&#10;Esempio: Prima riga.&lt;br&gt;Seconda riga."></textarea>
+      <div class="row"><button class="btn primary" onclick="addArchivePhrase()">Aggiungi all'archivio</button></div>
+    </div>
+    <div id="archiveList" class="archive-list"></div>
+  </section>
+</div>
+
+<div id="editModal" class="modal">
+  <div class="box">
+    <h3 id="editTitle">Modifica frase</h3>
+    <textarea id="editor"></textarea>
+    <button class="select" onclick="toggleArchiveChooser()">Scegli dall'archivio ▾</button>
+    <select id="archiveChooser" class="select" style="display:none"></select>
+    <div class="row">
+      <button class="btn primary" onclick="saveCurrentPhrase()">Salva</button>
+      <button class="btn" onclick="closeModal()">Annulla</button>
+    </div>
+    <div id="editStatus" class="status"></div>
+  </div>
+</div>
+
+<script>
+/* =========================
+   CONFIGURAZIONE
+   ========================= */
+const GITHUB_OWNER = "feelgoodvibes";
+const GITHUB_REPO  = "vibes";
+const GITHUB_BRANCH = "main";
+
+const TOKEN_KEY = "qr_admin_token_session";
+
+let token = sessionStorage.getItem(TOKEN_KEY) || "";
+let currentFile = null;
+let archivePhrases = [];
+
+const apiBase = () =>
+  `https://api.github.com/repos/${encodeURIComponent(GITHUB_OWNER)}/${encodeURIComponent(GITHUB_REPO)}/contents/`;
+
+function authHeaders(){
+  return {
+    "Accept":"application/vnd.github+json",
+    "Authorization":`Bearer ${token}`,
+    "X-GitHub-Api-Version":"2022-11-28"
+  };
+}
+
+function checkConfig(){
+  return !GITHUB_OWNER.includes("INSERISCI_") && !GITHUB_REPO.includes("INSERISCI_");
+}
+
+function login(){
+  const value=document.getElementById("tokenInput").value.trim();
+  const err=document.getElementById("loginError");
+  err.textContent="";
+  if(!value){err.textContent="Inserisci il token.";return;}
+  if(!checkConfig()){err.textContent="Prima configura GITHUB_OWNER e GITHUB_REPO nel file.";return;}
+  token=value;
+  testAuth().then(ok=>{
+    if(!ok){token="";return;}
+    sessionStorage.setItem(TOKEN_KEY,token);
+    document.getElementById("loginOverlay").classList.add("hidden");
+    init();
+  });
+}
+
+async function testAuth(){
+  const err=document.getElementById("loginError");
+  try{
+    const r=await fetch(`https://api.github.com/repos/${encodeURIComponent(GITHUB_OWNER)}/${encodeURIComponent(GITHUB_REPO)}`,{headers:authHeaders(),cache:"no-store"});
+    if(!r.ok) throw new Error(await githubError(r));
+    return true;
+  }catch(e){err.textContent=e.message||"Token non valido.";return false;}
+}
+
+function logout(){
+  sessionStorage.removeItem(TOKEN_KEY);
+  token="";
+  location.reload();
+}
+
+async function githubError(r){
+  try{const d=await r.json();return d.message||`Errore GitHub ${r.status}`;}catch{return `Errore GitHub ${r.status}`;}
+}
+
+async function getFile(path){
+  const r=await fetch(apiBase()+path.split("/").map(encodeURIComponent).join("/")+`?ref=${encodeURIComponent(GITHUB_BRANCH)}&_=${Date.now()}`,{headers:authHeaders(),cache:"no-store"});
+  if(!r.ok) throw new Error(await githubError(r));
+  const d=await r.json();
+  const binary=atob(d.content.replace(/\n/g,""));
+  const bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));
+  return {sha:d.sha,content:new TextDecoder().decode(bytes)};
+}
+
+async function putFile(path,content,sha,message){
+  const bytes=new TextEncoder().encode(content);
+  let binary="";
+  bytes.forEach(b=>binary+=String.fromCharCode(b));
+  const encoded=btoa(binary);
+  const body={message,content:encoded,branch:GITHUB_BRANCH,sha};
+  const r=await fetch(apiBase()+path.split("/").map(encodeURIComponent).join("/"),{
+    method:"PUT",headers:{...authHeaders(),"Content-Type":"application/json"},body:JSON.stringify(body)
+  });
+  if(!r.ok) throw new Error(await githubError(r));
+  return r.json();
+}
+
+function escapeHtml(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+}
+function displayText(s){
+  return escapeHtml(s).replace(/&lt;br\s*\/?&gt;/gi,"<br>");
+}
+
+async function init(){
+  document.getElementById("loginOverlay").classList.add("hidden");
+  await loadQRs();
+  await loadArchive();
+}
+
+async function loadQRs(){
+  const grid=document.getElementById("qrGrid");
+  grid.innerHTML="";
+  for(let i=1;i<=12;i++){
+    const file=`frase${i}.txt`;
+    const card=document.createElement("article");
+    card.className="card";
+    card.innerHTML=`<div class="num">QR ${i}</div><div class="preview">Caricamento…</div><div class="pencil">✎</div>`;
+    card.onclick=()=>openEditor(file,card.dataset.content||"");
+    grid.appendChild(card);
+    try{
+      const f=await getFile(file);
+      card.dataset.content=f.content;
+      card.querySelector(".preview").innerHTML=displayText(f.content).replace(/<br>/g," ");
+    }catch(e){
+      card.querySelector(".preview").textContent="Errore: "+e.message;
+    }
+  }
+}
+
+async function loadArchive(){
+  try{
+    const f=await getFile("archivio_frasi.txt");
+    archivePhrases=f.content.split(/<cambio>/i).map(x=>x.trim()).filter(Boolean);
+    renderArchive();
+  }catch(e){
+    archivePhrases=[];
+    renderArchive(e.message);
+  }
+}
+
+function renderArchive(error=""){
+  const list=document.getElementById("archiveList");
+  list.innerHTML="";
+  if(error){list.innerHTML=`<div class="empty">${escapeHtml(error)}</div>`;return;}
+  if(!archivePhrases.length){list.innerHTML='<div class="empty">Archivio vuoto.</div>';return;}
+  archivePhrases.forEach((p,i)=>{
+    const el=document.createElement("article");
+    el.className="archive-item";
+    el.innerHTML=`<div class="archive-text">${displayText(p)}</div><div class="actions"><button class="btn small" onclick="editArchivePhrase(${i})">✎ Modifica</button><button class="btn small danger" onclick="deleteArchivePhrase(${i})">🗑 Elimina</button></div>`;
+    list.appendChild(el);
+  });
+}
+
+async function saveArchive(message="Aggiornato archivio frasi"){
+  const f=await getFile("archivio_frasi.txt");
+  const content=archivePhrases.join("<cambio>\n");
+  await putFile("archivio_frasi.txt",content,f.sha,message);
+  renderArchive();
+}
+
+async function addArchivePhrase(){
+  const ta=document.getElementById("newArchivePhrase");
+  const p=ta.value.trim();
+  if(!p)return;
+  archivePhrases.push(p);
+  try{await saveArchive("Aggiunta frase all'archivio");ta.value="";}catch(e){alert(e.message);archivePhrases.pop();}
+}
+
+async function editArchivePhrase(i){
+  const p=prompt("Modifica la frase. Usa <br> per andare a capo:",archivePhrases[i]);
+  if(p===null||!p.trim())return;
+  const old=archivePhrases[i];
+  archivePhrases[i]=p.trim();
+  try{await saveArchive("Modificata frase nell'archivio");}catch(e){archivePhrases[i]=old;alert(e.message);}
+}
+
+async function deleteArchivePhrase(i){
+  if(!confirm("Eliminare questa frase dall'archivio?"))return;
+  const old=archivePhrases[i];
+  archivePhrases.splice(i,1);
+  try{await saveArchive("Eliminata frase dall'archivio");}catch(e){archivePhrases.splice(i,0,old);alert(e.message);}
+}
+
+function showPanel(which){
+  const qr=which==="qr";
+  document.getElementById("qrPanel").classList.toggle("active",qr);
+  document.getElementById("archivePanel").classList.toggle("active",!qr);
+  document.getElementById("tabQR").classList.toggle("active",qr);
+  document.getElementById("tabArchive").classList.toggle("active",!qr);
+}
+
+function openEditor(file,content){
+  currentFile=file;
+  document.getElementById("editTitle").textContent=`Modifica ${file}`;
+  document.getElementById("editor").value=content;
+  document.getElementById("editStatus").textContent="";
+  fillArchiveChooser();
+  document.getElementById("archiveChooser").style.display="none";
+  document.getElementById("editModal").classList.add("open");
+}
+
+function closeModal(){document.getElementById("editModal").classList.remove("open");}
+
+function fillArchiveChooser(){
+  const s=document.getElementById("archiveChooser");
+  s.innerHTML='<option value="">Scegli una frase dall’archivio…</option>';
+  archivePhrases.forEach((p,i)=>{
+    const o=document.createElement("option");
+    o.value=String(i);
+    o.textContent=p.replace(/<br\s*\/?>/gi," ");
+    s.appendChild(o);
+  });
+  s.onchange=()=>{
+    if(s.value!=="")document.getElementById("editor").value=archivePhrases[Number(s.value)];
+  };
+}
+
+function toggleArchiveChooser(){
+  const s=document.getElementById("archiveChooser");
+  s.style.display=s.style.display==="none"?"block":"none";
+}
+
+async function saveCurrentPhrase(){
+  const status=document.getElementById("editStatus");
+  const content=document.getElementById("editor").value;
+  if(!content.trim()){status.textContent="La frase non può essere vuota.";return;}
+  status.textContent="Salvataggio su GitHub…";
+  try{
+    const f=await getFile(currentFile);
+    await putFile(currentFile,content,f.sha,`Aggiornata ${currentFile}`);
+    status.textContent="Salvato ✓";
+    setTimeout(()=>{closeModal();loadQRs();},500);
+  }catch(e){status.textContent=e.message||"Errore durante il salvataggio.";}
+}
+
+if(token && checkConfig()){
+  testAuth().then(ok=>{if(ok)init();else{sessionStorage.removeItem(TOKEN_KEY);token="";}});
+}else{
+  document.getElementById("loginOverlay").classList.remove("hidden");
+}
+</script>
+</body>
+</html>
