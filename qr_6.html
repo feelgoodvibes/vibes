@@ -26,6 +26,7 @@ body{overflow:hidden;background:#111214;color:#fff;font-family:"DM Sans",sans-se
 .quote.visible{opacity:1}
 .quote-line{display:block;white-space:nowrap}
 .instagram{position:absolute;left:50%;bottom:30px;transform:translateX(-50%);width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:50%;color:#fff;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.1);box-shadow:0 10px 35px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.05);backdrop-filter:blur(12px);text-decoration:none}
+.error{font-family:monospace;font-size:12px;color:#aaa;max-width:90vw;white-space:pre-wrap}
 @media(max-width:600px){.header{height:76px;font-size:.72rem;letter-spacing:.08em}.quote-wrap{width:96vw;padding:8px}.instagram{bottom:22px;width:46px;height:46px}}
 </style>
 </head>
@@ -36,39 +37,88 @@ body{overflow:hidden;background:#111214;color:#fff;font-family:"DM Sans",sans-se
 <section class="quote-wrap"><div id="quote" class="quote"></div></section>
 <a class="instagram" href="https://www.instagram.com/nomeutente" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
 </main>
+
 <script>
 const PHRASE_FILE="frase6.txt";
 
-function escapeHtml(s){
-  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+function escapeHtml(text){
+  const div=document.createElement("div");
+  div.textContent=text;
+  return div.innerHTML;
 }
-function renderPhrase(raw){
-  const q=document.getElementById("quote");
-  const lines=raw.trim().split(/<br\\s*\\/?>/i);
-  q.innerHTML=lines.map(x=>`<span class="quote-line">${escapeHtml(x)}</span>`).join("");
-  fit();
-  requestAnimationFrame(()=>q.classList.add("visible"));
+
+function renderPhrase(text){
+  const quote=document.getElementById("quote");
+
+  // Rimuove eventuale BOM e spazi iniziali/finali.
+  text=text.replace(/^\\uFEFF/,"").trim();
+
+  // <br> è l'unico comando che decide il ritorno a capo.
+  // Il contenuto delle singole righe viene trattato come semplice testo,
+  // quindi nessun HTML viene interpretato accidentalmente.
+  const lines=text.split(/<br\\s*\\/?\\s*>/i);
+
+  quote.innerHTML=lines.map(line =>
+    '<span class="quote-line">'+escapeHtml(line)+'</span>'
+  ).join("");
+
+  fitFont();
+  requestAnimationFrame(()=>quote.classList.add("visible"));
 }
-function fit(){
-  const q=document.getElementById("quote");
+
+function fitFont(){
+  const quote=document.getElementById("quote");
   const wrap=document.querySelector(".quote-wrap");
-  if(!q.children.length)return;
-  let size=innerWidth<=600?54:90;
-  const min=innerWidth<=600?22:30;
-  const maxWidth=wrap.clientWidth*.94;
-  q.style.fontSize=size+"px";
+  const lines=quote.querySelectorAll(".quote-line");
+  if(!lines.length)return;
+
+  let size=innerWidth<=600 ? 54 : 90;
+  const min=innerWidth<=600 ? 18 : 28;
+  const maxWidth=wrap.clientWidth*0.94;
+
+  quote.style.fontSize=size+"px";
+
   while(size>min){
-    const tooWide=[...q.children].some(el=>el.scrollWidth>maxWidth);
+    let tooWide=false;
+    lines.forEach(line=>{
+      if(line.scrollWidth>maxWidth) tooWide=true;
+    });
     if(!tooWide)break;
     size--;
-    q.style.fontSize=size+"px";
+    quote.style.fontSize=size+"px";
   }
 }
-fetch(PHRASE_FILE,{cache:"no-store"})
- .then(r=>{if(!r.ok)throw new Error("File non trovato");return r.text()})
- .then(renderPhrase)
- .catch(()=>{document.getElementById("quote").textContent="Impossibile caricare la frase.";document.getElementById("quote").classList.add("visible")});
-addEventListener("resize",fit);
+
+async function loadPhrase(){
+  const quote=document.getElementById("quote");
+
+  try{
+    // Il parametro evita che il browser mostri una vecchia versione
+    // della frase dopo un salvataggio da gestione.html.
+    const response=await fetch(PHRASE_FILE+"?v="+Date.now(),{
+      cache:"no-store"
+    });
+
+    if(!response.ok){
+      throw new Error("HTTP "+response.status+" — impossibile leggere "+PHRASE_FILE);
+    }
+
+    const text=await response.text();
+
+    if(!text.trim()){
+      throw new Error(PHRASE_FILE+" è vuoto.");
+    }
+
+    renderPhrase(text);
+  }catch(error){
+    quote.classList.add("visible");
+    quote.innerHTML='<div class="error">'+escapeHtml(error.message)+'</div>';
+    console.error(error);
+  }
+}
+
+window.addEventListener("resize",fitFont);
+loadPhrase();
 </script>
 </body>
 </html>
