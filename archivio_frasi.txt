@@ -2,4 +2,5 @@ Questa è una frase dell'archivio.<br>Puoi modificarla.<cambio>
 Questa è un'altra frase.<cambio>
 Inserisci qui le tue frasi.<cambio>
 prova frase<cambio>
-Il momento giusto arriva<br>quando smetti di aspettarlo
+Il momento giusto arriva<br>quando smetti di aspettarlo<cambio>
+Oggi qualcuno penserà a te.<br>Forse anche per sbaglio
