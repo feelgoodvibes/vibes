@@ -3,4 +3,5 @@ Questa è un'altra frase.<cambio>
 Inserisci qui le tue frasi.<cambio>
 prova frase<cambio>
 Il momento giusto arriva<br>quando smetti di aspettarlo<cambio>
-Oggi qualcuno penserà a te.<br>Forse anche per sbaglio
+Oggi qualcuno penserà a te.<br>Forse anche per sbaglio<cambio>
+La fortuna ama<br>chi prova<br>una volta in più
